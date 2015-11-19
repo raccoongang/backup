@@ -1,4 +1,9 @@
 #!/usr/bin/python
+'''
+This script is create volume from last snapshot and attach this volume to instance.
+After attaching volume, server has stopping.
+After server started again, has runned the script restore_db.py.
+'''
 import os
 import re
 import json
