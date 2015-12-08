@@ -41,19 +41,7 @@ os.system('sudo /edx/bin/supervisorctl start all')
 res = os.popen('aws ec2 describe-snapshots --filters Name=description,Values=EDX*backup Name=status,Values=completed').read()
 snapshots = json.loads(res)['Snapshots']
 snapshots.sort(key=lambda x: x['StartTime'])
-delete_snapshots = []
-sunday_snapshots = []
 
-for i, snap in enumerate(snapshots[:-7]):
-    snap_datetime = datetime.strptime(snap['StartTime'], '%Y-%m-%dT%H:%M:%S.000Z')
-    if snap_datetime.strftime('%w') != 0:
-        delete_snapshots.append(snap)
-    else:
-        sunday_snapshots.append(snap)
-
-sunday_snapshots.sort(key=lambda x: x['StartTime'])
-delete_snapshots.extend(sunday_snapshots[:-5])
-
-for snap in delete_snapshots:
+for snap in snapshots[:-7]:
     print 'Delete shapshot "{}" ...'.format(snap['SnapshotId'])
     os.system('aws ec2 delete-snapshot --snapshot-id {}'.format(snap['SnapshotId']))
