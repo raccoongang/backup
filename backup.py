@@ -14,7 +14,9 @@ instance = json.loads(res)
 VOLUME_ID = instance['Reservations'][0]['Instances'][0]['BlockDeviceMappings'][0]['Ebs']['VolumeId']
 
 os.system('sudo /edx/bin/supervisorctl stop all')
+print 'Stop supervisor'
 os.system('sudo service mongod stop')
+print 'Stop mongod'
 
 
 DATABASES=( 'edxapp', 'xqueue', 'ora' )
@@ -22,7 +24,7 @@ DATABASES=( 'edxapp', 'xqueue', 'ora' )
 for db in DATABASES:
     os.system('mysqldump -u edxapp001 --databases {0} --single-transaction '
          '-h edxapp.ch7v9epk528p.eu-west-1.rds.amazonaws.com -pGhopCiord7 > /edx/var/backup/{0}.sql'.format(db))
-
+print 'Created mysqldump'
 
 res = os.popen('aws ec2 create-snapshot --volume-id {} --description "EDX `date +%Y-%m-%d` backup"'.format(VOLUME_ID)).read()
 snapshot = json.loads(res)
