@@ -20,7 +20,7 @@ os.system('sudo service mongod stop')
 DATABASES=( 'edxapp', 'xqueue', 'ora' )
 
 for db in DATABASES:
-    os.system('mysqldump -u edxapp001 --databases {0} --single-transaction'
+    os.system('mysqldump -u edxapp001 --databases {0} --single-transaction '
          '-h edxapp.ch7v9epk528p.eu-west-1.rds.amazonaws.com -pGhopCiord7 > /edx/var/backup/{0}.sql'.format(db))
 
 
