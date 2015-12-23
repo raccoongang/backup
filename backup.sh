@@ -62,7 +62,16 @@ sudo /edx/bin/supervisorctl start all
 sleep 10
 cd /var/www
 sudo kill $PID
-sudo /etc/init.d/nginx start
+
+port_used=initial
+until [[ "$port_used" = "" ]]
+do
+  echo "Nginx not started, try again..."
+  port_used=$(netstat -nl | grep -o ':80 ')
+done
+
+sudo service nginx start
+
 cd -
 
 # Deleting old snapshots except last 5
