@@ -6,7 +6,7 @@ import json
 import time
 from datetime import datetime
 
-AWS = '/usr/local/bin/aws'
+AWS = '/srv/Ops/shared/env/bin/aws'
 
 INSTANCE_ID = os.popen('ec2metadata | grep -Po "instance-id:\s*\K.+"').read()
 
@@ -14,9 +14,9 @@ res = os.popen('{} ec2 describe-instances --instance-ids {}'.format(AWS, INSTANC
 instance = json.loads(res)
 VOLUME_ID = instance['Reservations'][0]['Instances'][0]['BlockDeviceMappings'][0]['Ebs']['VolumeId']
 
-os.system('sudo /edx/bin/supervisorctl stop all')
-os.system('sudo service mongod stop')
-os.system('sudo service mysql stop')
+os.system('sudo supervisorctl stop all')
+#os.system('sudo service mongod stop')
+#os.system('sudo service mysql stop')
 
 res = os.popen('{} ec2 create-snapshot --volume-id {} --description "EDX `date +%Y-%m-%d` backup"'.format(AWS, VOLUME_ID)).read()
 snapshot = json.loads(res)
@@ -35,9 +35,9 @@ while True:
 
     time.sleep(10)
 
-os.system('sudo service mysql start')
-os.system('sudo service mongod start')
-os.system('sudo /edx/bin/supervisorctl start all')
+#os.system('sudo service mysql start')
+#os.system('sudo service mongod start')
+os.system('sudo supervisorctl start all')
 
 res = os.popen('{} ec2 describe-snapshots --filters Name=description,Values=EDX*backup Name=status,Values=completed'.format(AWS)).read()
 snapshots = json.loads(res)['Snapshots']
