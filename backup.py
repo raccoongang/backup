@@ -14,7 +14,7 @@ res = os.popen('{} ec2 describe-instances --instance-ids {}'.format(AWS, INSTANC
 instance = json.loads(res)
 VOLUME_ID = instance['Reservations'][0]['Instances'][0]['BlockDeviceMappings'][0]['Ebs']['VolumeId']
 
-os.system('sudo supervisorctl stop all')
+os.system('sudo /edx/bin/supervisorctl stop all')
 os.system('sudo service mongod stop')
 os.system('sudo service mysql stop')
 
@@ -37,7 +37,7 @@ while True:
 
 os.system('sudo service mysql start')
 os.system('sudo service mongod start')
-os.system('sudo supervisorctl start all')
+os.system('sudo /edx/bin/supervisorctl start all')
 
 res = os.popen('{} ec2 describe-snapshots --filters Name=description,Values=EDX*backup Name=status,Values=completed'.format(AWS)).read()
 snapshots = json.loads(res)['Snapshots']
