@@ -10,7 +10,7 @@ VOLUME_ID=$(aws ec2 describe-instances --instance-ids $INSTANCE_ID | grep -Pzo '
 
 # sudo /etc/init.d/nginx stop
 # sleep 5
-sudo touch /edx/var/backup/www/backup.file
+sudo touch /edx/var/backup/backup.file
 
 sudo /edx/bin/supervisorctl stop all
 sudo service mongod stop
@@ -49,7 +49,7 @@ sudo service mongod start
 sudo /edx/bin/supervisorctl start all
 
 sleep 60
-sudo rm /edx/var/backup/www/backup.file
+sudo rm /edx/var/backup/backup.file
 
 
 #port_used=initial
