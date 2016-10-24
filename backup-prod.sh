@@ -36,6 +36,7 @@ timemark=`date +%d%m%Y.%H%M`
 host=`hostname`
 pathbkfiles='/backup/'$backup_type'/'$host'/f'
 pathdbfiles='/backup/'$backup_type'/'$host'/d'
+slack_token=""
 
 # list of directories and files for backup separated by space (dirs='/dir1 /dir2 /dir3')
 dirs=''
@@ -108,5 +109,5 @@ backup_databases_mongo () {
 #backup_databases_mongo
 ssh -i $prkey $bkuserid@$bkhost "rsync -av --delete /backup/ /mnt/s3/ > /dev/null 2>&1"
 post_to_slack "Backup process has been finished on $host" "INFO"
-curl -X POST --data 'payload={"channel": "#script-channel", "username": "Backup", "text": "'"$backup_type backup process has been finished on $host"'"}' https://hooks.slack.com/services/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
+curl -X POST --data 'payload={"channel": "#script-channel", "username": "Backup", "text": "'"$backup_type backup process has been finished on $host"'"}' https://hooks.slack.com/services/$slack_token
 exit 0
